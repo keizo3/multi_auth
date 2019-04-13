@@ -93,14 +93,14 @@ class MultiAuth::Provider::Google < MultiAuth::Provider
       access_token
     )
 
-    user.first_name = name["givenName"].as_s?
-    user.last_name = name["familyName"].as_s?
+    user.first_name = name["givenName"]?.try &.as_s? || ""
+    user.last_name = name["familyName"]?.try &.as_s? || ""
 
-    user.nickname = primary("nicknames")["value"].as_s if primary?("nicknames")
-    user.image = primary("photos")["url"].as_s if primary?("photos")
-    user.location = primary("addresses")["formattedValue"].as_s if primary?("addresses")
-    user.email = primary("emailAddresses")["value"].as_s if primary?("emailAddresses")
-    user.phone = primary("phoneNumbers")["canonicalForm"].as_s if primary?("phoneNumbers")
+    user.nickname = primary("nicknames")["value"]?.try &.as_s || "" if primary?("nicknames")
+    user.image = primary("photos")["url"]?.try &.as_s || "" if primary?("photos")
+    user.location = primary("addresses")["formattedValue"]?.try &.as_s || "" if primary?("addresses")
+    user.email = primary("emailAddresses")["value"]?.try &.as_s || "" if primary?("emailAddresses")
+    user.phone = primary("phoneNumbers")["canonicalForm"]?.try &.as_s || "" if primary?("phoneNumbers")
     user.description = primary("biographies")["value"].as_s if primary?("biographies")
 
     if json["urls"]?
